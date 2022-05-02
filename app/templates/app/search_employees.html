@@ -1,0 +1,76 @@
+{% extends "app/base.html" %}
+
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h3 class="mt-4 text-center">Employees</h3>
+
+{% if submitbutton == 'Search' and request.GET.q != '' %}
+{% if results %}
+
+<div id="searchOutput">
+  <table id="employeeTable" class="table table-bordered">
+    <thead class="table-secondary">
+      <tr>
+        <th>Empolyee ID</th>
+        <th>Employee Full Name</th>
+        <th>Employee Status</th>
+        <th>Employee Type</th>
+        <th>Department</th>
+        <th>Skill Set</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Customer Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for employee in results %}
+      <tr>
+        <td>{{ employee.emp_id }}</td>
+        <td>{{ employee.emp_name }}</td>
+        <td>{{ employee.emp_status }}</td>
+        <td>{{ employee.emp_type }}</td>
+        <td>{{ employee.skill_set }}</td>
+        <td>{{ employee.department }}</td>
+        <td>{{ employee.start_date }}</td>
+        <td>{{ employee.end_date }}</td>
+        <td>{{ employee.customer_name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% else %}
+
+<div id="searchOutput">
+  <table id="employeeTable" class="table table-bordered">
+    <thead class="table-secondary">
+      <tr>
+        <th>Empolyee ID</th>
+        <th>Employee Full Name</th>
+        <th>Employee Status</th>
+        <th>Employee Type</th>
+        <th>Department</th>
+        <th>Skill Set</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Customer Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
+  <center><h3 s>No search results for this query</h3><center>
+</div>
+
+{% endif %}
+{% endif %} 
+
+{% endblock %}
+</div>

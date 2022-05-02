@@ -1,0 +1,160 @@
+{% extends "app/base.html" %}
+
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h3 class="mt-4 text-center">Employees</h3>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div  class="input-group">
+        <form action="/searchposts/" method="GET" value="{{request.GET.q}}">
+          <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search Name/Id" required>
+          <input type="submit" name="submit" value="Search"/>
+          </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="input-group" style="margin-left: 300px;">
+        <form action="/date_range/" method="GET" value="{{request.GET.q}}">
+          StartDate: <input type="date" id="birthday" name="start_date" required> &nbsp
+          EndtDate: <input type="date" id="birthday" name="end_date" required>&nbsp
+          <input type="submit" name="submit" value="Search"/>
+          </form>
+      </div>
+    </div>
+    
+
+    <div  class="col-md-3">
+      <div class="float-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#addEmployeeModal">
+          <i class="fas fa-plus"></i>
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="searchOutput">
+    <table id="employeeTable" class="table table-bordered">
+      <thead class="table-secondary">
+        <tr>
+          <th>Empolyee ID</th>
+          <th>Employee Full Name</th>
+          <th>Employee Status</th>
+          <th>Employee Type</th>
+          <th>Department</th>
+          <th>Skill Set</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Customer Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for employee in employees %}
+        <tr>
+          <td>{{ employee.emp_id }}</td>
+          <td>{{ employee.emp_name }}</td>
+          <td>{{ employee.emp_status }}</td>
+          <td>{{ employee.emp_type }}</td>
+          <td>{{ employee.skill_set }}</td>
+          <td>{{ employee.department }}</td>
+          <td>{{ employee.start_date }}</td>
+          <td>{{ employee.end_date }}</td>
+          <td>{{ employee.customer_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Employee Modal -->
+  <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLable"
+   aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Employee</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action='/add_employee/'>
+            {% csrf_token %}
+            <div class="mb-4">
+              <input style="width:100%;" name="emp_id" type="text"
+              class="form-control mb-2" placeholder="Employee ID" required>
+
+              <input style="width:100%;" name="emp_name" type="text"
+              class="form-control mb-2" placeholder="Employee Name" required>
+
+              {% comment %} <input style="width:100%;" name="last_name" type="text"
+              class="form-control mb-2" placeholder="" required> {% endcomment %}
+
+              <label for="cars">Employee Status:</label>
+              <select id="cars" name="emp_status">
+                <option value="Active">Active</option>
+                <option value="InActive">InActive</option>
+              </select><br><br>
+
+              <label for="cars">Employee Type:</label>
+              <select id="cars" name="emp_type">
+                <option value="Bench">Bench</option>
+                <option value="Oilc-Bench">Oilc-Bench</option>
+              </select>
+
+              <label for="cars">Department:</label>
+              <select id="cars" name="department">
+                <option value="Python">Python</option>
+                <option value="java">java</option>
+              </select>
+
+              <input style="width:100%;" name="skill_set" type="text"
+              class="form-control mb-2" placeholder="Skilset" required>
+
+              
+
+              <label for="start_date">Start-Date:</label>
+              <input type="date" id="birthday" name="start_date"><br><br>
+              
+              <label for="start_date">Start-Date:</label>
+              <input type="date" id="birthday" name="end_date"><br><br>
+              
+              <input style="width:100%;" name="customer_name" type="text"
+              class="form-control" placeholder="Customer-Name" required>
+            </div>
+
+            <button class="btn btn-primary" type="submit" name="button">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- JS Function to Search Employee -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(document).on("click","#searchEmployee",function() {
+      var searchTerm = $("#searchBox").val();
+
+      $.ajax({
+          type: "POST",
+          url: "{% url 'app:search_employees' %}",
+          data: {'searchTerm':searchTerm},
+          success: function(response){
+            $('#searchOutput').html(response);
+          }
+      });
+
+    });
+  });
+</script>
+
+{% endblock %}
